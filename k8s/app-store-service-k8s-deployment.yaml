@@ -1,0 +1,69 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: app-store-service-v2
+  name: app-store-service-v2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-store-service-v2
+  template:
+    metadata:
+      labels:
+        app: app-store-service-v2
+      name: app-store-service-v2
+    spec:
+      containers:
+      - env:
+        - name: ENVIRONMENT
+          value: production
+        - name: CASSANDRA_HOSTS
+          value: cassandra.corp.apptentive.com
+        - name: CASSANDRA_PORT
+          value: "9042"
+        - name: CASSANDRA_KEYSPACE
+          value: app_store_prod
+        - name: APP_STORE_SERVICE_MODE
+          value: api-server
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: secret
+              name: jwt
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              key: app-store-service-v2-dsn
+              name: sentry-app-store-service-v2
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 1
+          httpGet:
+            path: /api/v2/store/android/apps/com.starbucks.mobilecard
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: app-store-service
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/v2/store/android/apps/com.starbucks.mobilecard
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+
