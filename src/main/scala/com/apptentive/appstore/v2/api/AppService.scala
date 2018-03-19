@@ -1,21 +1,18 @@
 package com.apptentive.appstore.v2.api
 
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
-import com.apptentive.appstore.v2.config.CassandraConfig
 import com.apptentive.appstore.v2.model.{AppQueryParameters, AppStore, EmptyResult, PaginationParams}
 import com.apptentive.appstore.v2.repository.AppRepository
 import com.apptentive.appstore.v2.util.DateUtils.dateUnmarshaller
 import com.apptentive.appstore.v2.util.JsonUtils.jsonify
+import com.datastax.driver.core.Cluster
 import com.typesafe.scalalogging.LazyLogging
-import org.json4s._
-import org.json4s.native.Serialization
 
-class AppService(appRepository: AppRepository) extends LazyLogging {
+class AppService(appRepository: AppRepository, cluster: Cluster) extends LazyLogging {
 
   import akka.http.scaladsl.server.Directives._
 
   val routes = {
-    val cluster = CassandraConfig.defaultCluster
     implicit val session = cluster.connect()
 
     pathPrefix("api" / "v2") {

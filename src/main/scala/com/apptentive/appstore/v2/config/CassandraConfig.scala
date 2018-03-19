@@ -3,7 +3,6 @@ package com.apptentive.appstore.v2.config
 import java.net.InetAddress
 
 import com.datastax.driver.core.{Cluster, Session}
-import org.cassandraunit.utils.EmbeddedCassandraServerHelper
 
 import scala.collection.JavaConversions._
 
@@ -17,22 +16,16 @@ object CassandraConfig {
     }
 
   def host: Seq[InetAddress] = {
-    propOrEnvOrElse("ENVIRONMENT", "") match {
-      case "test" => Seq(EmbeddedCassandraServerHelper.getHost).map(InetAddress.getByName)
-      case default => propOrEnvOrElse("CASSANDRA_HOSTS", "") match {
-        case "" => Seq("localhost").map(InetAddress.getByName)
-        case other => other.split(",").map(InetAddress.getByName)
-      }
+    propOrEnvOrElse("CASSANDRA_HOSTS", "") match {
+      case "" => Seq("localhost").map(InetAddress.getByName)
+      case other => other.split(",").map(InetAddress.getByName)
     }
   }
 
   def port: Int = {
-    propOrEnvOrElse("ENVIRONMENT", "") match {
-      case "test" => EmbeddedCassandraServerHelper.getNativeTransportPort
-      case default => propOrEnvOrElse("CASSANDRA_PORT", "") match {
-        case "" => 9042
-        case other => other.toInt
-      }
+    propOrEnvOrElse("CASSANDRA_PORT", "") match {
+      case "" => 9042
+      case other => other.toInt
     }
   }
 

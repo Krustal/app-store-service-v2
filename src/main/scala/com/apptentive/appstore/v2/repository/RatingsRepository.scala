@@ -64,7 +64,7 @@ class RatingsRepository extends BaseRepository {
     }.getOrElse(baseQuery)
   }
 
-  private def paginate(paginationParams: PaginationParams, query: Select.Where) = {
+  private def paginate(paginationParams: PaginationParams, query: Select.Where): Select = {
     paginate(paginationParams, query, "ingest_time")
   }
 
@@ -73,8 +73,8 @@ class RatingsRepository extends BaseRepository {
       row.getString("store_id"),
       row.getString("store"),
       row.getString("region"),
-      toDateTime(row.getTimestamp("ingest_time")),
-      toDateTime(row.getTimestamp("store_observed_time")),
+      row.getTimestamp("ingest_time").getTime,
+      row.getTimestamp("store_observed_time").getTime,
       row.getMap("all_ratings_histogram", classOf[Integer], classOf[java.lang.Long]).asScala.toMap
         .map({ case (i: Integer, l: java.lang.Long) => (i.toInt, l.toLong) }),
       row.getDouble("all_ratings_average"),

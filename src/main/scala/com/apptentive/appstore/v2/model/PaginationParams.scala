@@ -7,6 +7,6 @@ object PaginationParams {
 
 case class PaginationParams(private val _pageSize: Option[Int], minKey: Option[Long], sortOrder: Option[String]) {
   def pageSize = {
-    Math.max(_pageSize.getOrElse(PaginationParams.DEFAULT_PAGE_SIZE), PaginationParams.MAX_PAGE_SIZE)
+    Math.min(_pageSize.getOrElse(PaginationParams.DEFAULT_PAGE_SIZE), PaginationParams.MAX_PAGE_SIZE)
   }
 }
