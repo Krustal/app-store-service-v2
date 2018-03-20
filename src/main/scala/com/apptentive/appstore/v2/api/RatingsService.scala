@@ -1,19 +1,18 @@
 package com.apptentive.appstore.v2.api
 
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
-import com.apptentive.appstore.v2.config.CassandraConfig
 import com.apptentive.appstore.v2.model.{AppStore, EmptyResult, PaginationParams, RatingsQueryParameters}
 import com.apptentive.appstore.v2.repository.RatingsRepository
 import com.apptentive.appstore.v2.util.DateUtils.dateUnmarshaller
 import com.apptentive.appstore.v2.util.JsonUtils.jsonify
+import com.datastax.driver.core.Cluster
 import com.typesafe.scalalogging.LazyLogging
 
-class RatingsService(ratingsRepository: RatingsRepository) extends LazyLogging {
+class RatingsService(ratingsRepository: RatingsRepository, cluster: Cluster) extends LazyLogging {
 
   import akka.http.scaladsl.server.Directives._
 
   val routes = {
-    val cluster = CassandraConfig.defaultCluster
     implicit val session = cluster.connect()
 
     pathPrefix("api" / "v2") {

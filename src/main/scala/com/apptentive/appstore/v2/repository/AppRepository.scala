@@ -61,8 +61,8 @@ class AppRepository extends BaseRepository {
       row.getString("title"),
       row.getString("icon"),
       row.getString("version"),
-      DateUtils.toDateTime(row.getTimestamp("updated_date")),
-      DateUtils.toDateTime(row.getTimestamp("ingestion_time"))
+      row.getTimestamp("updated_date").getTime,
+      row.getTimestamp("ingestion_time").getTime
     )
   }
 }

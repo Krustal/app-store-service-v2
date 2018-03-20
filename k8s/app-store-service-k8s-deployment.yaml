@@ -24,38 +24,27 @@ spec:
         - name: CASSANDRA_PORT
           value: "9042"
         - name: CASSANDRA_KEYSPACE
-          value: app_store_prod
-        - name: APP_STORE_SERVICE_MODE
-          value: api-server
-        - name: JWT_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: secret
-              name: jwt
-        - name: SENTRY_DSN
-          valueFrom:
-            secretKeyRef:
-              key: app-store-service-v2-dsn
-              name: sentry-app-store-service-v2
+#        TODO change to prod schema
+          value: app_store_dev_v2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 1
           httpGet:
-            path: /api/v2/store/android/apps/com.starbucks.mobilecard
+            path: /api/v2/
             port: 8080
             scheme: HTTP
           initialDelaySeconds: 30
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
-        name: app-store-service
+        name: app-store-service-v2
         ports:
         - containerPort: 8080
           protocol: TCP
         readinessProbe:
           failureThreshold: 3
           httpGet:
-            path: /api/v2/store/android/apps/com.starbucks.mobilecard
+            path: /api/v2/
             port: 8080
             scheme: HTTP
           initialDelaySeconds: 5

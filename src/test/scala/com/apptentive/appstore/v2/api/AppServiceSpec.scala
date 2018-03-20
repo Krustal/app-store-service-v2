@@ -13,7 +13,7 @@ class AppServiceSpec extends BaseCassandraSpec {
 
   override def beforeAll() = {
     super.beforeAll()
-    appService = new AppService(new AppRepository)
+    appService = new AppService(new AppRepository, cluster)
   }
 
   describe("App API") {
@@ -62,7 +62,7 @@ class AppServiceSpec extends BaseCassandraSpec {
           val storeAppId = "com.secretwhisper.bibleverses"
           val pageSize = 1
           val baseUri = s"/api/v2/store/android/apps/$storeAppId/versions?page_size=$pageSize"
-          val expectedMinKey = 1520646542
+          val expectedMinKey = 1520639342000L
 
           val getReq = HttpRequest(HttpMethods.GET, uri = baseUri)
 
@@ -86,7 +86,7 @@ class AppServiceSpec extends BaseCassandraSpec {
             (result \ "data").values.asInstanceOf[Seq[JObject]].length shouldBe pageSize
             (result \ "page_size").extract[Int] shouldBe pageSize
             (result \ "has_more").extract[Boolean] shouldBe true
-            (result \ "min_key").extract[Long] should be(1520646542L)
+            (result \ "min_key").extract[Long] should be(1520639342000L)
           })
         }
       }

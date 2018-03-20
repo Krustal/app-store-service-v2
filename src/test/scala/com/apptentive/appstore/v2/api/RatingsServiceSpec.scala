@@ -12,7 +12,7 @@ class RatingsServiceSpec extends BaseCassandraSpec {
 
   override def beforeAll() = {
     super.beforeAll()
-    ratingsService = new RatingsService(new RatingsRepository)
+    ratingsService = new RatingsService(new RatingsRepository, cluster)
   }
 
   describe("Review Histograms API") {
@@ -68,8 +68,8 @@ class RatingsServiceSpec extends BaseCassandraSpec {
       implicit val formats = DefaultFormats
       val storeAppId = "1120219625"
       val pageSize = 10
-      val startDate = "2018-03-08"
-      val endDate = "2018-03-09"
+      val startDate = "2018-03-09"
+      val endDate = "2018-03-10"
       val baseUri = s"/api/v2/store/itunes/apps/$storeAppId/ratings-histograms?page_size=$pageSize&start_date=$startDate&end_date=$endDate"
 
       val getReq = HttpRequest(HttpMethods.GET, uri = baseUri)
@@ -79,8 +79,8 @@ class RatingsServiceSpec extends BaseCassandraSpec {
         contentType shouldBe ContentTypes.`application/json`
         val result = parse(entityAs[String])
         (result \ "data").values.asInstanceOf[Seq[JObject]].length shouldBe 2
-        ((result \ "data") (0) \ "ingest_time").extract[Long] shouldBe 1520373600000L
-        ((result \ "data") (1) \ "ingest_time").extract[Long] shouldBe 1520812800000L
+        ((result \ "data") (0) \ "ingest_time").extract[Long] shouldBe 1520697965000L
+        ((result \ "data") (1) \ "ingest_time").extract[Long] shouldBe 1520612146000L
         (result \ "page_size").extract[Int] shouldBe pageSize
         (result \ "has_more").extract[Boolean] shouldBe false
       })
@@ -90,8 +90,8 @@ class RatingsServiceSpec extends BaseCassandraSpec {
       implicit val formats = DefaultFormats
       val storeAppId = "1120219625"
       val pageSize = 10
-      val startDate = "2018-03-08"
-      val endDate = "2018-03-09"
+      val startDate = "2018-03-09"
+      val endDate = "2018-03-10"
       val sortOrder = "asc"
       val baseUri = s"/api/v2/store/itunes/apps/$storeAppId/ratings-histograms?page_size=$pageSize&start_date=$startDate&end_date=$endDate&sort_order=$sortOrder"
 
@@ -101,7 +101,7 @@ class RatingsServiceSpec extends BaseCassandraSpec {
         status.isSuccess() shouldBe true
         contentType shouldBe ContentTypes.`application/json`
         val result = parse(entityAs[String])
-        ((result \ "data") (1) \ "ingest_time").extract[Long] shouldBe 1520812800000L
+        ((result \ "data") (1) \ "ingest_time").extract[Long] shouldBe 1520697965000L
       })
     }
 
@@ -109,11 +109,11 @@ class RatingsServiceSpec extends BaseCassandraSpec {
       implicit val formats = DefaultFormats
       val storeAppId = "1120219625"
       val pageSize = 10
-      val startDate = "2018-03-08"
-      val endDate = "2018-03-09"
+      val startDate = "2018-03-09"
+      val endDate = "2018-03-10"
 
       val sortOrder = "desc"
-      val baseUri = s"/api/v2/store/android/apps/$storeAppId/ratings-histograms?page_size=$pageSize&start_date=$startDate&end_date=$endDate&sort_order=$sortOrder"
+      val baseUri = s"/api/v2/store/itunes/apps/$storeAppId/ratings-histograms?page_size=$pageSize&start_date=$startDate&end_date=$endDate&sort_order=$sortOrder"
 
       val getReq = HttpRequest(HttpMethods.GET, uri = baseUri)
 
@@ -121,7 +121,7 @@ class RatingsServiceSpec extends BaseCassandraSpec {
         status.isSuccess() shouldBe true
         contentType shouldBe ContentTypes.`application/json`
         val jobj = parse(entityAs[String])
-        ((jobj \ "data") (1) \ "ingest_time").extract[Long] shouldBe 1520373600000L
+        ((jobj \ "data") (1) \ "ingest_time").extract[Long] shouldBe 1520612146000L
       })
     }
   }
@@ -130,7 +130,7 @@ class RatingsServiceSpec extends BaseCassandraSpec {
     it("should paginate properly") {
       implicit val formats = DefaultFormats
 
-      val expectedMinKey = 1520812800000L
+      val expectedMinKey = 1520612146000L
       val storeAppId = "1120219625"
       val pageSize = 1
       val baseUri = s"/api/v2/store/itunes/apps/$storeAppId/ratings-histograms?page_size=$pageSize"
@@ -142,7 +142,7 @@ class RatingsServiceSpec extends BaseCassandraSpec {
         contentType shouldBe ContentTypes.`application/json`
         val result = parse(entityAs[String])
         (result \ "data").values.asInstanceOf[Seq[JObject]].length shouldBe pageSize
-        ((result \ "data") (0) \ "ingest_time").extract[Long] shouldBe 152078900000L
+        ((result \ "data") (0) \ "ingest_time").extract[Long] shouldBe 1520697965000L
         (result \ "page_size").extract[Int] shouldBe pageSize
         (result \ "has_more").extract[Boolean] shouldBe true
         (result \ "min_key").extract[Long] should be(expectedMinKey)
@@ -156,10 +156,10 @@ class RatingsServiceSpec extends BaseCassandraSpec {
         contentType shouldBe ContentTypes.`application/json`
         val jobj = parse(entityAs[String])
         (jobj \ "data").values.asInstanceOf[Seq[JObject]].length shouldBe pageSize
-        ((jobj \ "data") (0) \ "ingest_time").extract[Long] shouldBe 152054500000L
+        ((jobj \ "data") (0) \ "ingest_time").extract[Long] shouldBe 1520697965000L
         (jobj \ "page_size").extract[Int] shouldBe pageSize
         (jobj \ "has_more").extract[Boolean] shouldBe true
-        (jobj \ "min_key").extract[Long] shouldBe 1520373600000L
+        (jobj \ "min_key").extract[Long] shouldBe 1520612146000L
       })
     }
   }

@@ -1,13 +1,11 @@
 package com.apptentive.appstore.v2.model
 
-import java.time.{LocalDateTime, ZoneOffset}
-
 case class Ratings(
   storeId: String,
   store: String,
   region: String,
-  ingestTime: LocalDateTime,
-  storeObservedTime: LocalDateTime,
+  ingestTime: Long,
+  storeObservedTime: Long,
   allRatings: Map[Int, Long],
   allRatingsAverage: Double,
   allRatingsCount: Long,
@@ -16,5 +14,5 @@ case class Ratings(
   currentRatingsCount: Long,
   version: String,
 ) extends Pageable {
-  override def nextMinKey = ingestTime.toEpochSecond(ZoneOffset.UTC)
+  override def nextMinKey = ingestTime
 }
