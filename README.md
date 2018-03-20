@@ -1,7 +1,7 @@
-#App Store Service V2
+# App Store Service V2
 A second version of the infamous app store service, meant for decoupling read and write ops. This is a completely stateless service that just serves API requests.
 
-#Local dev environment setup
+# Local dev environment setup
 
 You need to install sbt 1.+: https://www.scala-sbt.org/
 
@@ -10,9 +10,9 @@ After that, exectute "sbt seed" from the project root.
 
 To run the service itself, execute "sbt run".
 
-#API
+# API
 
-#Get Apps by store
+# Get Apps by store
 
 GET /api/v2/store/{store}/apps
 
@@ -47,7 +47,7 @@ Sample response:
       "min_key": 1520293742000
     }
 
-#Get app versions
+# Get app versions
 
 GET /api/v2/store/{store}/apps/{storeId}/versions
 
@@ -80,7 +80,7 @@ Sample response:
       "min_key": 1520293742000
     }
 
-#Get a single app version
+# Get a single app version
 
 GET /api/v2/store/{store}/apps/{storeId}/versions/{version}
 
@@ -106,7 +106,7 @@ Sample response:
       "ingestion_time": 1520293742000
     }
 
-#Get ratings of an app
+# Get ratings of an app
 
 GET /api/v2/store/{store}/apps/{storeId}/ratings-histograms
 
@@ -144,7 +144,7 @@ Sample response:
       "min_key": 1520439346000
     }
     
-#Get ratings of an app for a specific date
+# Get ratings of an app for a specific date
 
 GET /api/v2/store/{store}/apps/{storeId}/ratings-histograms/{date}
 
