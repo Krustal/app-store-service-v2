@@ -6,14 +6,6 @@ object AppStore {
   }
 }
 
-case class AppStore(private val _store: String) {
-  require(_store == "android" || _store == "itunes")
-
-  def store = {
-    _store match {
-      case "android" => "Android"
-      case "itunes" => "iOS"
-      case _ => throw new IllegalStateException
-    }
-  }
+case class AppStore(store: String) {
+  require(store == "android" || store == "itunes")
 }

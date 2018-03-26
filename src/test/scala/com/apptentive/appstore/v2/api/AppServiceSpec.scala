@@ -16,9 +16,54 @@ class AppServiceSpec extends BaseCassandraSpec {
     appService = new AppService(new AppRepository, cluster)
   }
 
+  describe("Health") {
+    it("should respond") {
+      val getReq = HttpRequest(
+        HttpMethods.GET,
+        uri = s"/api/v2/health")
+
+      getReq ~> appService.routes ~> check({
+        handled shouldBe true
+        status.isSuccess() shouldBe true
+        val result = entityAs[String]
+        result shouldBe "OK"
+      })
+    }
+  }
+
   describe("App API") {
     describe("Apps Queries") {
       describe ("retrieving apps") {
+        it("should get current app version") {
+          val storeAppId = "com.secretwhisper.bibleverses"
+
+          val getReq = HttpRequest(
+            HttpMethods.GET,
+            uri = s"/api/v2/store/android/apps/${storeAppId}")
+
+          getReq ~> appService.routes ~> check({
+            handled shouldBe true
+            status.isSuccess() shouldBe true
+            contentType shouldBe ContentTypes.`application/json`
+            val result = parse(entityAs[String])
+            (result \ "store_id").extract[String] shouldBe "com.secretwhisper.bibleverses"
+            (result \ "version").extract[String] shouldBe "tbd2"
+          })
+        }
+
+        it("should 404 if unknown app") {
+          val storeAppId = "com.secretwhisper.bibleverses1"
+
+          val getReq = HttpRequest(
+            HttpMethods.GET,
+            uri = s"/api/v2/store/android/apps/${storeAppId}")
+
+          getReq ~> appService.routes ~> check({
+            handled shouldBe true
+            status.intValue() shouldBe 404
+          })
+        }
+
         it("should get apps by store") {
           val getReq = HttpRequest(
             HttpMethods.GET,
@@ -62,7 +107,7 @@ class AppServiceSpec extends BaseCassandraSpec {
           val storeAppId = "com.secretwhisper.bibleverses"
           val pageSize = 1
           val baseUri = s"/api/v2/store/android/apps/$storeAppId/versions?page_size=$pageSize"
-          val expectedMinKey = 1520639342000L
+          val expectedMinKey = 1520646542000L
 
           val getReq = HttpRequest(HttpMethods.GET, uri = baseUri)
 
@@ -86,7 +131,7 @@ class AppServiceSpec extends BaseCassandraSpec {
             (result \ "data").values.asInstanceOf[Seq[JObject]].length shouldBe pageSize
             (result \ "page_size").extract[Int] shouldBe pageSize
             (result \ "has_more").extract[Boolean] shouldBe true
-            (result \ "min_key").extract[Long] should be(1520639342000L)
+            (result \ "min_key").extract[Long] should be(1520646542000L)
           })
         }
       }

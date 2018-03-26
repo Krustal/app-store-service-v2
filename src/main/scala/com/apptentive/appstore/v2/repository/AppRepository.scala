@@ -9,6 +9,19 @@ import com.datastax.driver.core.{Row, Session}
 import scala.collection.JavaConverters._
 
 class AppRepository extends BaseRepository {
+  def findApp(store: AppStore, storeId: String)(implicit session: Session): Option[App] = {
+    val query = QueryBuilder.select()
+      .from(CassandraConfig.keyspace, "current_version_apps").where()
+      .and(QueryBuilder.eq("store", store.store))
+      .and(QueryBuilder.eq("store_id", storeId))
+
+    val row = session.execute(query).one()
+    if (row == null)
+      None
+    else
+      Some(fromRow(row))
+  }
+
   def findByStore(store: AppStore, pagination: PaginationParams, queryParameters: AppQueryParameters)(implicit session: Session): QueryResult[App] = {
     val query = QueryBuilder.select()
       .from(CassandraConfig.keyspace, "current_version_apps")

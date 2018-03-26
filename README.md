@@ -46,6 +46,24 @@ Sample response:
       "has_more": true,
       "min_key": 1520293742000
     }
+    
+# Get current app version
+
+GET /api/v2/store/{store}/apps/{storeId}
+
+Sample response:
+
+    {
+      "store_id": "com.secretwhisper.bibleverses",
+      "store": "Android",
+      "category": null,
+      "developer": "Secret Whispers",
+      "title": "Messages from God",
+      "icon": "https://lh3.ggpht.com/zcfcJhPoekGz3rioJIzWDXXOmFVnl4veP1Y_KrxwDdF7lm2OPxvo40N1t5e9xrGNjaab",
+      "version": "tbd2",
+      "updated_date": 1520293742000,
+      "ingestion_time": 1520293742000
+    }    
 
 # Get app versions
 
@@ -143,6 +161,120 @@ Sample response:
       "has_more": false,
       "min_key": 1520439346000
     }
+    
+Sample multi version response:
+
+    {
+      "data": [
+        {
+          "store_id": "1120219625",
+          "store": "itunes",
+          "region": "AU",
+          "ingest_time": 1520619346000,
+          "store_observed_time": 1520380800000,
+          "all_ratings": {
+            "5": 72,
+            "1": 3,
+            "2": 0,
+            "3": 8,
+            "4": 27
+          },
+          "all_ratings_average": 4.5,
+          "all_ratings_count": 110,
+          "current_ratings": {
+            "5": 69,
+            "1": 1,
+            "2": 0,
+            "3": 7,
+            "4": 26
+          },
+          "current_ratings_average": 4.5,
+          "current_ratings_count": 103,
+          "version": "1.1"
+        },
+        {
+          "store_id": "1120219625",
+          "store": "itunes",
+          "region": "US",
+          "ingest_time": 1520619346000,
+          "store_observed_time": 1520380800000,
+          "all_ratings": {
+            "5": 72,
+            "1": 3,
+            "2": 0,
+            "3": 8,
+            "4": 27
+          },
+          "all_ratings_average": 4.5,
+          "all_ratings_count": 110,
+          "current_ratings": {
+            "5": 69,
+            "1": 1,
+            "2": 0,
+            "3": 7,
+            "4": 26
+          },
+          "current_ratings_average": 4.5,
+          "current_ratings_count": 103,
+          "version": "1.1"
+        },    
+        {
+          "store_id": "1120219625",
+          "store": "itunes",
+          "region": "",
+          "ingest_time": 1520705165000,
+          "store_observed_time": 1520467200000,
+          "all_ratings": {
+            "5": 72,
+            "1": 3,
+            "2": 0,
+            "3": 8,
+            "4": 27
+          },
+          "all_ratings_average": 4.5,
+          "all_ratings_count": 110,
+          "current_ratings": {
+            "5": 69,
+            "1": 1,
+            "2": 0,
+            "3": 7,
+            "4": 26
+          },
+          "current_ratings_average": 4.5,
+          "current_ratings_count": 103,
+          "version": "1.1"
+        },
+        {
+          "store_id": "1120219625",
+          "store": "itunes",
+          "region": "",
+          "ingest_time": 1520705165000,
+          "store_observed_time": 1520467200000,
+          "all_ratings": {
+            "5": 72,
+            "1": 3,
+            "2": 0,
+            "3": 8,
+            "4": 27
+          },
+          "all_ratings_average": 4.5,
+          "all_ratings_count": 110,
+          "current_ratings": {
+            "5": 69,
+            "1": 1,
+            "2": 0,
+            "3": 7,
+            "4": 26
+          },
+          "current_ratings_average": 4.5,
+          "current_ratings_count": 103,
+          "version": "1.1"
+        }
+      ],
+      "page_size": 10,
+      "has_more": false,
+      "min_key": 0
+    }    
     
 # Get ratings of an app for a specific date
 

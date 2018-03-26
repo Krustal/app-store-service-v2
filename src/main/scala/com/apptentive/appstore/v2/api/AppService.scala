@@ -1,6 +1,6 @@
 package com.apptentive.appstore.v2.api
 
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse, StatusCodes}
 import com.apptentive.appstore.v2.model.{AppQueryParameters, AppStore, EmptyResult, PaginationParams}
 import com.apptentive.appstore.v2.repository.AppRepository
 import com.apptentive.appstore.v2.util.DateUtils.dateUnmarshaller
@@ -25,6 +25,15 @@ class AppService(appRepository: AppRepository, cluster: Cluster) extends LazyLog
             complete(HttpEntity(ContentTypes.`application/json`, jsonify(result)))
           }
         } ~
+          path("store" / Segment.flatMap(AppStore.fromPath) / "apps" / Segment) { (store, storeId) =>
+            get {
+              val result = appRepository.findApp(store, storeId)
+              if (result.isDefined)
+                complete(HttpEntity(ContentTypes.`application/json`, jsonify(result)))
+              else
+                complete(HttpResponse(StatusCodes.NotFound))
+            }
+          } ~
           path("store" / Segment.flatMap(AppStore.fromPath) / "apps" / Segment / "versions") { (store, storeId) =>
             get {
               val result = appRepository.findVersions(store, storeId, PaginationParams(pageSize, minKey, None), queryParams)
@@ -35,6 +44,11 @@ class AppService(appRepository: AppRepository, cluster: Cluster) extends LazyLog
             get {
               val result = appRepository.findVersion(store, storeId, version)
               complete(HttpEntity(ContentTypes.`application/json`, jsonify(result.getOrElse(EmptyResult))))
+            }
+          } ~
+          path("health") {
+            get {
+              complete("OK")
             }
           }
       }
