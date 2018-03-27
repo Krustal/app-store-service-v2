@@ -3,7 +3,7 @@ A second version of the infamous app store service, meant for decoupling read an
 
 # Local dev environment setup
 
-You need to install sbt 1.+: https://www.scala-sbt.org/
+You need to install sbt 1.+: https://www.scala-sbt.org/ and JDK 1.8.+
 
 To seed cassandra data ASS-v2 uses the "dev" cassandra instance from https://github.com/apptentive/dev repo. Make sure you have it running.
 After that, exectute "sbt seed" from the project root.

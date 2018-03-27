@@ -151,7 +151,7 @@ class AppServiceSpec extends BaseCassandraSpec {
             contentType shouldBe ContentTypes.`application/json`
             (result \ "data").values.asInstanceOf[Seq[JObject]].length shouldBe 45
             ((result \ "data") (0) \ "store_id").extract[String] shouldBe "com.secretwhisper.bibleverses"
-            ((result \ "data") (0) \ "version").extract[String] shouldBe "tbd44"
+            ((result \ "data") (0) \ "version").extract[String] shouldBe "tbd45"
           })
         }
       }
