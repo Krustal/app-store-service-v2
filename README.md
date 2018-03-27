@@ -10,6 +10,10 @@ After that, exectute "sbt seed" from the project root.
 
 To run the service itself, execute "sbt run".
 
+*OR*
+
+Run it as part of the dev ecosystem from the `atrium` deployment.
+
 # API
 
 # Get Apps by store
