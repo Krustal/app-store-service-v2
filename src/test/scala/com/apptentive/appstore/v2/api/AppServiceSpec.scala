@@ -1,19 +1,25 @@
 package com.apptentive.appstore.v2.api
 
 import akka.http.scaladsl.model._
+import com.apptentive.appstore.v2.elasticsearch.ESClient
+import com.apptentive.appstore.v2.model.AppSuggestion
 import com.apptentive.appstore.v2.repository.AppRepository
 import org.json4s.native.JsonMethods.parse
 import org.json4s.native.Serialization
 import org.json4s.{DefaultFormats, JNothing, JObject, NoTypeHints}
+import org.mockito.Mockito
+
+import scala.concurrent.Future
 
 class AppServiceSpec extends BaseCassandraSpec {
   private var appService: AppService = null
 
   private implicit val formats = org.json4s.DefaultFormats
+  private val esClient = mock[ESClient]
 
   override def beforeAll() = {
     super.beforeAll()
-    appService = new AppService(new AppRepository, cluster)
+    appService = new AppService(new AppRepository, esClient, cluster)
   }
 
   describe("Health") {
@@ -27,6 +33,23 @@ class AppServiceSpec extends BaseCassandraSpec {
         status.isSuccess() shouldBe true
         val result = entityAs[String]
         result shouldBe "OK"
+      })
+    }
+  }
+
+  describe("Text search") {
+    it("should return apps") {
+      Mockito.when(esClient.searchApps("asd", 15)).thenReturn(Future.successful(List(AppSuggestion("123", "android", "testPub", "pub1", "testApp"))))
+
+      val getReq = HttpRequest(
+        HttpMethods.GET,
+        uri = s"/api/v2/store/apps?text=asd&per=15")
+
+      getReq ~> appService.routes ~> check({
+        handled shouldBe true
+        status.isSuccess() shouldBe true
+        val result = entityAs[String]
+        result shouldBe """[{"store_app_id":"123","store":"android","publisher_name":"testPub","publisher_id":"pub1","app_name":"testApp"}]"""
       })
     }
   }

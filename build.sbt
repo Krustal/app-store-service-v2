@@ -33,6 +33,8 @@ libraryDependencies ++= {
     "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
     "ch.qos.logback" % "logback-classic" % "1.1.7",
     "com.getsentry.raven" % "raven-logback" % "7.8.6",
+    "org.elasticsearch" % "elasticsearch" % "2.4.5",
+    "io.searchbox" % "jest" % "2.4.0",
 
     "org.cassandraunit" % "cassandra-unit" % "2.2.2.1" % Test excludeAll (ExclusionRule(organization = "org.slf4j")),
     "org.scalatest" %% "scalatest" % scalaTestV % Test,
