@@ -149,7 +149,7 @@ class AppServiceSpec extends BaseCassandraSpec {
             status.isSuccess() shouldBe true
             val result = parse(entityAs[String])
             contentType shouldBe ContentTypes.`application/json`
-            (result \ "data").values.asInstanceOf[Seq[JObject]].length shouldBe 44
+            (result \ "data").values.asInstanceOf[Seq[JObject]].length shouldBe 45
             ((result \ "data") (0) \ "store_id").extract[String] shouldBe "com.secretwhisper.bibleverses"
             ((result \ "data") (0) \ "version").extract[String] shouldBe "tbd44"
           })
